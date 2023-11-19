@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FirstOrganizationSetupController;
+use App\Http\Controllers\OrganizationController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -44,6 +46,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/verifyemail', [AuthController::class, 'verifyEmail'])->name('verification.notice');
 
     Route::middleware(['verified'])->group(function () {
+        Route::get('/createorganization', [FirstOrganizationSetupController::class, 'firstCreate'])->name('organization.create.first');
+
+        Route::name('organization.')->prefix('organization')->group(function() {
+            Route::post('/create', [OrganizationController::class, 'store'])->name('create');
+        });
+    });
+
+    Route::middleware(['verified', 'check_organization'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
 

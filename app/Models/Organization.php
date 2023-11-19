@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class Organization extends Model
 {
     use HasFactory;
 
@@ -16,21 +16,12 @@ class Role extends Model
      */
     protected $fillable = [
         'name',
+        'code',
+        'logo'
     ];
-
-    /**
-     * Get the users for the role.
-     */
-    public function users()
+    
+    public function UserOrganization()
     {
-        return $this->hasMany(User::class);
-    }
-
-    /**
-     * Get the organizations for the role.
-     */
-    public function organizations()
-    {
-        return $this->hasMany(Organization::class);
+        return $this->hasMany(UserOrganization::class);
     }
 }

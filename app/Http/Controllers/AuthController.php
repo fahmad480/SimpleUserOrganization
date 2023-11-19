@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Organization;
+use App\Models\UserOrganization;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Auth\Events\Registered;
@@ -34,6 +36,12 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 $request->user()->tokens()->delete();
                 $request->session()->put('auth_token', $token = $request->user()->createToken('authToken')->plainTextToken);
+
+                $user_organization = UserOrganization::where('user_id', Auth::user()->id)->first();
+                if ($user_organization) {
+                    $organization = Organization::where('id', $user_organization->organization_id)->first();
+                    $request->session()->put('organization', $organization);
+                }
 
                 return response()->json([
                     'success' => true,

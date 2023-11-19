@@ -191,6 +191,9 @@
             }
 
             $("#form").submit(function(e) {
+                $("#signup").val("signing up...");
+                $("#signup").attr("disabled", true);
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -219,6 +222,9 @@
                             icon: "error",
                             button: "OK",
                         });
+
+                        $("#signup").val("Sign Up");
+                        $("#signup").attr("disabled", false);
 
                         $.each(data.responseJSON.errors, function(key, value) {
                             if ($("#" + key).attr("type") == "password") {

@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OrganizationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +16,7 @@ use App\Http\Controllers\Api\AuthController;
 */
 
 Route::name('api.')->middleware(['auth:sanctum'])->group(function () {
-    // Route::name('car.')->prefix('car')->group(function() {
-    //     Route::get('/', [CarController::class, 'index'])->name('index');
-    //     Route::get('/{id?}', [CarController::class, 'show'])->name('show');
-    //     Route::post('/', [CarController::class, 'store'])->name('store');
-    //     Route::put('/{id?}', [CarController::class, 'update'])->name('update');
-    //     Route::delete('/{id?}', [CarController::class, 'destroy'])->name('destroy');
+    // Route::name('organization.')->prefix('organization')->group(function() {
+    //     Route::post('/create', [OrganizationController::class, 'store'])->name('create');
     // });
 });

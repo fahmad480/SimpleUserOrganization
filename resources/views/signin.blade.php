@@ -110,6 +110,7 @@
                                         <input type="text" class="form-control" id="email" name="email"
                                             placeholder="john@example.com" aria-describedby="email" tabindex="1"
                                             autofocus />
+                                        <div class="invalid-feedback"></div>
                                     </div>
 
                                     <div class="mb-1">
@@ -127,6 +128,7 @@
                                             <span class="input-group-text cursor-pointer"><i
                                                     data-feather="eye"></i></span>
                                         </div>
+                                        <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="mb-1">
                                         <div class="form-check">
@@ -185,6 +187,9 @@
             }
 
             $("#form").submit(function(e) {
+                $("#signin").val("signing in...");
+                $("#signin").attr("disabled", true);
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -212,6 +217,20 @@
                         text: data.responseJSON.message,
                         icon: "error",
                         button: "OK",
+                    });
+
+                    $("#signin").val("Sign In");
+                    $("#signin").attr("disabled", false);
+
+                    $.each(data.responseJSON.errors, function(key, value) {
+                        if ($("#" + key).attr("type") == "password") {
+                            $("#" + key).addClass("is-invalid");
+                            $("#" + key).parent().addClass("is-invalid");
+                            $("#" + key).parent().parent().find(".invalid-feedback").html(value);
+                        } else {
+                            $("#" + key).addClass("is-invalid");
+                            $("#" + key).parent().find(".invalid-feedback").html(value);
+                        }
                     });
                 },
             });
