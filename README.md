@@ -14,6 +14,7 @@ The way I use is to use/utilize the session to activate the organization we want
 2. Run `composer install`
 3. Run `php artisan migrate:fresh --seed`
 4. Run `php artisan storage:link`
-5. Setup your database in `.env` file
-6. Setup your smtp/mail in `.env` file cause this project use email verification for register (required)
-7. Run `php artisan serve`
+5. copy `.env.example` to `.env`
+6. Setup your database in `.env` file
+7. Setup your smtp/mail in `.env` file cause this project use email verification for register (required)
+8. Run `php artisan serve`
