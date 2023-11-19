@@ -54,25 +54,25 @@
                         data-feather="home"></i><span class="menu-title text-truncate"
                         data-i18n="Dashboards">Dashboards</span></a>
             </li>
+            <li class=" nav-item"><a class="d-flex align-items-center"
+                    href="{{ route('organization.create.first') }}"><i data-feather="file-plus"></i><span
+                        class="menu-title text-truncate" data-i18n="Create new Organization">Create new
+                        Organization</span></a>
+            </li>
             <li class=" navigation-header"><span data-i18n="Main Menu">Main Menu</span><i
                     data-feather="more-horizontal"></i>
             </li>
-            <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="file-plus"></i><span
-                        class="menu-title text-truncate" data-i18n="Rent">Rent</span></a>
-                <ul class="menu-content">
-                    <li><a class="d-flex align-items-center" href="{{ route('rent.index') }}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="Your Ren List">Your Rent List</span></a>
-                    </li>
-                    <li><a class="d-flex align-items-center" href="{{ route('rent.store') }}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="Rent a Car">Rent a Car</span></a>
-                    </li>
-                    <li><a class="d-flex align-items-center" href="{{ route('rent.return') }}"><i
-                                data-feather="circle"></i><span class="menu-item text-truncate"
-                                data-i18n="Return a Car">Return a Car</span></a>
-                    </li>
-                </ul>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="check-square"></i><span
+                        class="menu-title text-truncate" data-i18n="Check In Now">Check In Now</span></a>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="archive"></i><span
+                        class="menu-title text-truncate" data-i18n="Check In History">Check In History</span></a>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="target"></i><span
+                        class="menu-title text-truncate" data-i18n="Goal">Goal</span></a>
+            </li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="users"></i><span
+                        class="menu-title text-truncate" data-i18n="My Team">My Team</span></a>
             </li>
         </ul>
     </div>

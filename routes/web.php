@@ -50,11 +50,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::name('organization.')->prefix('organization')->group(function() {
             Route::post('/create', [OrganizationController::class, 'store'])->name('create');
+            Route::post('/join', [OrganizationController::class, 'join'])->name('join');
         });
     });
 
     Route::middleware(['verified', 'check_organization'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/switch/{organization}', [OrganizationController::class, 'switch'])->name('dashboard.switch');
     });
 
     // Route::prefix('/car')->controller(CarController::class)->name('car.')->group(function () {

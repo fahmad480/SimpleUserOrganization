@@ -218,7 +218,7 @@
                                             <form id="joinorg">
                                                 <div class="mb-1">
                                                     <label class="form-label" for="orgcode">Organiation Code</label>
-                                                    <input id="orgcode" class="form-control" type="text"
+                                                    <input id="code" name="code" class="form-control" type="text"
                                                         placeholder="Organization Code" />
                                                 </div>
                                                 <div class="col-12 col-sm-6 mb-1">
@@ -295,6 +295,38 @@
                 formData.append('_token', '{{ csrf_token() }}');
                 $.ajax({
                     url: '{{ route("organization.create") }}',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = '{{ route("dashboard") }}';
+                        });
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.responseJSON.message,
+                        });
+                    }
+                });
+            });
+
+            $("#joinorg").submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                formData.append('_token', '{{ csrf_token() }}');
+                $.ajax({
+                    url: '{{ route("organization.join") }}',
                     type: 'POST',
                     data: formData,
                     cache: false,

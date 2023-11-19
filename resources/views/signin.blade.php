@@ -188,7 +188,7 @@
 
             $("#form").submit(function(e) {
                 $("#signin").val("signing in...");
-                $("#signin").attr("disabled", true);
+                $("#signin").addClass("disabled");
 
                 e.preventDefault();
 
@@ -220,7 +220,7 @@
                     });
 
                     $("#signin").val("Sign In");
-                    $("#signin").attr("disabled", false);
+                    $("#signin").removeClass("disabled");
 
                     $.each(data.responseJSON.errors, function(key, value) {
                         if ($("#" + key).attr("type") == "password") {

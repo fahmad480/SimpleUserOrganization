@@ -63,11 +63,7 @@
 
 
     <!-- BEGIN: Main Menu-->
-    @if (session('role') == 'admin')
-    @include('dashboard._layouts._sidebar_admin')
-    @else
     @include('dashboard._layouts._sidebar')
-    @endif
     <!-- END: Main Menu-->
 
     <!-- BEGIN: Content-->

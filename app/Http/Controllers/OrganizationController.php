@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Organization;
 use App\Models\UserOrganization;
+use App\Models\Role;
+use App\Http\Controllers\Traits\SessionCacheOrganization;
 
 class OrganizationController extends Controller
 {
+    use SessionCacheOrganization;
+
     public function store(Request $request) {
         try {
             DB::beginTransaction();
@@ -48,7 +52,7 @@ class OrganizationController extends Controller
             $user_org->role_id = $request->role;
             $user_org->save();
 
-            $request->session()->put('organization', $org);
+            $this->cacheOrganization($request, $org, Role::where('id', $request->role)->first());
 
             DB::commit();
 
@@ -64,6 +68,59 @@ class OrganizationController extends Controller
                 'message' => 'Organization creation failed!',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function join(Request $request) {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'code' => 'required',
+            ]);
+
+            $org = Organization::where('code', $request->code)->first();
+
+            if ($org) {
+                $user_org = new UserOrganization;
+                $user_org->user_id = $request->user()->id;
+                $user_org->organization_id = $org->id;
+                $user_org->role_id = 3;
+                $user_org->save();
+
+                $this->cacheOrganization($request, $org, Role::where('id', 3)->first());
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Organization joined successfully!',
+                    'organization' => $org,
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Organization not found!',
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization join failed!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function switch(Request $request, Organization $organization) {
+        $user_organization = UserOrganization::where('user_id', $request->user()->id)->where('organization_id', $organization->id)->first();
+        if ($user_organization) {
+            $this->cacheOrganization($request, $organization, Role::where('id', $user_organization->role_id)->first());
+
+            return redirect()->route('dashboard');
+        } else {
+            return redirect()->route('dashboard');
         }
     }
 }

@@ -11,9 +11,12 @@ use App\Models\UserOrganization;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Auth\Events\Registered;
+use App\Http\Controllers\Traits\SessionCacheOrganization;
 
 class AuthController extends Controller
 {
+    use SessionCacheOrganization;
+
     public function signin() {
         return view('signin');
     }
@@ -40,7 +43,8 @@ class AuthController extends Controller
                 $user_organization = UserOrganization::where('user_id', Auth::user()->id)->first();
                 if ($user_organization) {
                     $organization = Organization::where('id', $user_organization->organization_id)->first();
-                    $request->session()->put('organization', $organization);
+
+                    $this->cacheOrganization($request, $organization, $user_organization->role);
                 }
 
                 return response()->json([

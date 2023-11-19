@@ -32,5 +32,17 @@ class DatabaseSeeder extends Seeder
         \App\Models\Role::factory()->create([
             'name' => 'Member',
         ]);
+
+        \App\Models\Organization::factory()->create([
+            'name' => 'Test Organization',
+            'code' => 'TST' . rand(100, 999),
+            'logo' => 'assets/images/portrait/small/avatar-s-11.jpg',
+        ]);
+
+        \App\Models\UserOrganization::factory()->create([
+            'user_id' => 1,
+            'organization_id' => 1,
+            'role_id' => 1,
+        ]);
     }
 }
