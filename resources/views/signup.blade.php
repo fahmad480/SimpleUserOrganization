@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Sign In | {{ getenv('APP_NAME') }}</title>
+    <title>Sign Up | {{ getenv('APP_NAME') }}</title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
@@ -104,45 +104,55 @@
                                 <h4 class="card-title mb-1">Welcome to {{ getenv('APP_NAME') }}!</h4>
                                 <p class="card-text mb-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
 
-                                <form class="auth-login-form mt-2" id="form">
+                                <form id="form">
                                     <div class="mb-1">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="email" name="email"
-                                            placeholder="john@example.com" aria-describedby="email" tabindex="1"
+                                        <label for="name" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            placeholder="Enter your full name" aria-describedby="name" tabindex="1"
                                             autofocus />
+                                        <div class="invalid-feedback"></div>
                                     </div>
 
                                     <div class="mb-1">
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label" for="password">Password</label>
-                                            <a href="{{ route('auth.forgot-password') }}">
-                                                <small>Forgot Password?</small>
-                                            </a>
-                                        </div>
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            placeholder="Enter your email" aria-describedby="email" tabindex="2" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+
+                                    <div class="mb-1">
+                                        <label class="form-label" for="password">Password</label>
                                         <div class="input-group input-group-merge form-password-toggle">
                                             <input type="password" class="form-control form-control-merge" id="password"
-                                                name="password" tabindex="2"
+                                                name="password" tabindex="3"
                                                 placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                                 aria-describedby="password" />
                                             <span class="input-group-text cursor-pointer"><i
                                                     data-feather="eye"></i></span>
                                         </div>
+                                        <div class="invalid-feedback"></div>
                                     </div>
+
                                     <div class="mb-1">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="remember"
-                                                name="remember" tabindex="3" />
-                                            <label class="form-check-label" for="remember"> Remember Me </label>
+                                        <label class="form-label" for="password_confirmation">Re-type Password</label>
+                                        <div class="input-group input-group-merge form-password-toggle">
+                                            <input type="password" class="form-control form-control-merge"
+                                                id="password_confirmation" name="password_confirmation" tabindex="4"
+                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                aria-describedby="password_confirmation" />
+                                            <span class="input-group-text cursor-pointer"><i
+                                                    data-feather="eye"></i></span>
                                         </div>
+                                        <div class="invalid-feedback"></div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100" tabindex="4" id="signin">Sign
-                                        In</button>
+                                    <input type="submit" class="btn btn-primary w-100" tabindex="5" id="signup"
+                                        value="Sign Up">
                                 </form>
 
                                 <p class="text-center mt-2">
-                                    <span>New on our platform?</span>
-                                    <a href="{{ route('auth.signup') }}">
-                                        <span>Create an account</span>
+                                    <span>Already have an account?</span>
+                                    <a href="{{ route('auth.signin') }}">
+                                        <span>Sign in here</span>
                                     </a>
                                 </p>
                             </div>
@@ -171,10 +181,6 @@
     <script src="/assets/js/core/app.js"></script>
     <!-- END: Theme JS-->
 
-    <!-- BEGIN: Page JS-->
-    <script src="/assets/js/scripts/pages/auth-login.js"></script>
-    <!-- END: Page JS-->
-
     <script>
         $(document).ready(function() {
             if (feather) {
@@ -191,30 +197,41 @@
                 formData.append('_token', '{{ csrf_token() }}');
 
                 $.ajax({
-                url: "{{ route('auth.signin_action') }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    Swal.fire({
-                        title: "Success!",
-                        text: data.message,
-                        icon: "success",
-                        button: "OK",
-                    }).then((value) => {
-                        window.location.href = "{{ route('dashboard') }}";
-                    });
-                },
-                error: function(data) {
-                    Swal.fire({
-                        title: "Error!",
-                        text: data.responseJSON.message,
-                        icon: "error",
-                        button: "OK",
-                    });
-                },
-            });
+                    url: "{{ route('auth.signup_action') }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Your account has been created!",
+                            icon: "success",
+                            button: "OK",
+                        }).then(function() {
+                            window.location.href = "{{ route('auth.signin') }}";
+                        });
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: data.responseJSON.message,
+                            icon: "error",
+                            button: "OK",
+                        });
+
+                        $.each(data.responseJSON.errors, function(key, value) {
+                            if ($("#" + key).attr("type") == "password") {
+                                $("#" + key).addClass("is-invalid");
+                                $("#" + key).parent().addClass("is-invalid");
+                                $("#" + key).parent().parent().find(".invalid-feedback").html(value);
+                            } else {
+                                $("#" + key).addClass("is-invalid");
+                                $("#" + key).parent().find(".invalid-feedback").html(value);
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

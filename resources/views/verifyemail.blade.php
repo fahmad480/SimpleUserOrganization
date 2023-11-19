@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Sign In | {{ getenv('APP_NAME') }}</title>
+    <title>Verify Email | {{ env('APP_NAME') }}</title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
@@ -32,7 +32,6 @@
 
     <!-- BEGIN: Page CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/plugins/forms/form-validation.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/pages/authentication.css">
     <!-- END: Page CSS-->
 
@@ -57,10 +56,10 @@
             <div class="content-body">
                 <div class="auth-wrapper auth-basic px-2">
                     <div class="auth-inner my-2">
-                        <!-- Login basic -->
+                        <!-- verify email basic -->
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="/" class="brand-logo">
+                                <a href="index.html" class="brand-logo">
                                     <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                                         xmlns:xlink="http://www.w3.org/1999/xlink" height="28">
                                         <defs>
@@ -98,56 +97,23 @@
                                             </g>
                                         </g>
                                     </svg>
-                                    <h2 class="brand-text text-primary ms-1">{{ getenv('APP_NAME') }}</h2>
+                                    <h2 class="brand-text text-primary ms-1">{{ env('APP_NAME') }}</h2>
                                 </a>
 
-                                <h4 class="card-title mb-1">Welcome to {{ getenv('APP_NAME') }}!</h4>
-                                <p class="card-text mb-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
-
-                                <form class="auth-login-form mt-2" id="form">
-                                    <div class="mb-1">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="email" name="email"
-                                            placeholder="john@example.com" aria-describedby="email" tabindex="1"
-                                            autofocus />
-                                    </div>
-
-                                    <div class="mb-1">
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label" for="password">Password</label>
-                                            <a href="{{ route('auth.forgot-password') }}">
-                                                <small>Forgot Password?</small>
-                                            </a>
-                                        </div>
-                                        <div class="input-group input-group-merge form-password-toggle">
-                                            <input type="password" class="form-control form-control-merge" id="password"
-                                                name="password" tabindex="2"
-                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                aria-describedby="password" />
-                                            <span class="input-group-text cursor-pointer"><i
-                                                    data-feather="eye"></i></span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-1">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="remember"
-                                                name="remember" tabindex="3" />
-                                            <label class="form-check-label" for="remember"> Remember Me </label>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100" tabindex="4" id="signin">Sign
-                                        In</button>
-                                </form>
+                                <h2 class="card-title fw-bolder mb-1">Verify your email ✉️</h2>
+                                <p class="card-text mb-2">
+                                    We've sent a link to your email address: <span class="fw-bolder">{{
+                                        Auth::user()->email }}</span> Please follow the
+                                    link inside to continue.
+                                </p>
 
                                 <p class="text-center mt-2">
-                                    <span>New on our platform?</span>
-                                    <a href="{{ route('auth.signup') }}">
-                                        <span>Create an account</span>
-                                    </a>
+                                    <span>Didn't receive an email? </span><a href="Javascript:void(0)"
+                                        id="resendEmail"><span>&nbsp;Resend</span></a>
                                 </p>
                             </div>
                         </div>
-                        <!-- /Login basic -->
+                        <!-- / verify email basic -->
                     </div>
                 </div>
 
@@ -163,7 +129,6 @@
     <!-- BEGIN Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
-    <script src="/assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -172,11 +137,10 @@
     <!-- END: Theme JS-->
 
     <!-- BEGIN: Page JS-->
-    <script src="/assets/js/scripts/pages/auth-login.js"></script>
     <!-- END: Page JS-->
 
     <script>
-        $(document).ready(function() {
+        $(window).on('load', function() {
             if (feather) {
                 feather.replace({
                     width: 14,
@@ -184,39 +148,41 @@
                 });
             }
 
-            $("#form").submit(function(e) {
-                e.preventDefault();
+            $("#resendEmail").on('click', function() {
+                $(this).attr('disabled', true);
+                resend()
+            });
 
-                var formData = new FormData(this);
-                formData.append('_token', '{{ csrf_token() }}');
-
+            function resend() {
                 $.ajax({
-                url: "{{ route('auth.signin_action') }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    Swal.fire({
-                        title: "Success!",
-                        text: data.message,
-                        icon: "success",
-                        button: "OK",
-                    }).then((value) => {
-                        window.location.href = "{{ route('dashboard') }}";
-                    });
-                },
-                error: function(data) {
-                    Swal.fire({
-                        title: "Error!",
-                        text: data.responseJSON.message,
-                        icon: "error",
-                        button: "OK",
-                    });
-                },
-            });
-            });
-        });
+                    url: "{{ route('verification.send') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Email Sent',
+                            text: 'We have sent you a new verification link to your email address.',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                        $("#resendEmail").attr('disabled', false);
+                    },
+                    error: function(response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            showConfirmButton: false,
+                            timer: 3000
+                        })
+                        $("#resendEmail").attr('disabled', false);
+                    }
+                })
+            }
+        })
     </script>
 </body>
 <!-- END: Body-->
