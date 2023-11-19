@@ -11,7 +11,7 @@
     <meta name="keywords"
         content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Sign In | {{ getenv('APP_NAME') }}</title>
+    <title>Verify Email | {{ env('APP_NAME') }}</title>
     <link rel="apple-touch-icon" href="/assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
@@ -32,7 +32,6 @@
 
     <!-- BEGIN: Page CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/plugins/forms/form-validation.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/pages/authentication.css">
     <!-- END: Page CSS-->
 
@@ -57,10 +56,10 @@
             <div class="content-body">
                 <div class="auth-wrapper auth-basic px-2">
                     <div class="auth-inner my-2">
-                        <!-- Login basic -->
+                        <!-- verify email basic -->
                         <div class="card mb-0">
                             <div class="card-body">
-                                <a href="/" class="brand-logo">
+                                <a href="index.html" class="brand-logo">
                                     <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                                         xmlns:xlink="http://www.w3.org/1999/xlink" height="28">
                                         <defs>
@@ -101,55 +100,52 @@
                                     <h2 class="brand-text text-primary ms-1">{{ getenv('APP_NAME') }}</h2>
                                 </a>
 
-                                <h4 class="card-title mb-1">Welcome to {{ getenv('APP_NAME') }}!</h4>
-                                <p class="card-text mb-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
+                                <h4 class="card-title mb-1">Reset Password 🔒</h4>
+                                <p class="card-text mb-2">Your new password must be different from previously used
+                                    passwords</p>
 
-                                <form class="auth-login-form mt-2" id="form">
-                                    <div class="mb-1">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="email" name="email"
-                                            placeholder="john@example.com" aria-describedby="email" tabindex="1"
-                                            autofocus />
-                                        <div class="invalid-feedback"></div>
-                                    </div>
-
+                                <form class="auth-reset-password-form mt-2" id="form">
                                     <div class="mb-1">
                                         <div class="d-flex justify-content-between">
-                                            <label class="form-label" for="password">Password</label>
-                                            <a href="{{ route('password.request') }}">
-                                                <small>Forgot Password?</small>
-                                            </a>
+                                            <label class="form-label" for="password">New Password</label>
                                         </div>
                                         <div class="input-group input-group-merge form-password-toggle">
                                             <input type="password" class="form-control form-control-merge" id="password"
-                                                name="password" tabindex="2"
+                                                name="password"
                                                 placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                                aria-describedby="password" />
+                                                aria-describedby="password" tabindex="1" autofocus />
                                             <span class="input-group-text cursor-pointer"><i
                                                     data-feather="eye"></i></span>
                                         </div>
                                         <div class="invalid-feedback"></div>
                                     </div>
                                     <div class="mb-1">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="remember"
-                                                name="remember" tabindex="3" />
-                                            <label class="form-check-label" for="remember"> Remember Me </label>
+                                        <div class="d-flex justify-content-between">
+                                            <label class="form-label" for="password_confirmation">Confirm
+                                                Password</label>
                                         </div>
+                                        <div class="input-group input-group-merge form-password-toggle">
+                                            <input type="password" class="form-control form-control-merge"
+                                                id="password_confirmation" name="password_confirmation"
+                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                aria-describedby="password_confirmation" tabindex="2" />
+                                            <span class="input-group-text cursor-pointer"><i
+                                                    data-feather="eye"></i></span>
+                                        </div>
+                                        <div class="invalid-feedback"></div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100" tabindex="4" id="signin">Sign
-                                        In</button>
+                                    <button class="btn btn-primary w-100" tabindex="3" id="submit">Set New
+                                        Password</button>
                                 </form>
 
                                 <p class="text-center mt-2">
-                                    <span>New on our platform?</span>
-                                    <a href="{{ route('auth.signup') }}">
-                                        <span>Create an account</span>
+                                    <a href="{{ route('auth.signin') }}"> <i data-feather="chevron-left"></i> Back to
+                                        signin
                                     </a>
                                 </p>
                             </div>
                         </div>
-                        <!-- /Login basic -->
+                        <!-- / verify email basic -->
                     </div>
                 </div>
 
@@ -165,7 +161,6 @@
     <!-- BEGIN Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
-    <script src="/assets/vendors/js/forms/validation/jquery.validate.min.js"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -174,68 +169,72 @@
     <!-- END: Theme JS-->
 
     <!-- BEGIN: Page JS-->
-    <script src="/assets/js/scripts/pages/auth-login.js"></script>
     <!-- END: Page JS-->
 
     <script>
-        $(document).ready(function() {
+        $(window).on('load', function() {
             if (feather) {
                 feather.replace({
                     width: 14,
                     height: 14
                 });
             }
-
+            
             $("#form").submit(function(e) {
-                $("#signin").val("signing in...");
-                $("#signin").addClass("disabled");
+                $("#submit").val("Setting New Password...").addClass("disabled");
 
                 e.preventDefault();
 
+                var urlParams = new URLSearchParams(window.location.search);
+                var email = urlParams.get('email');
+
                 var formData = new FormData(this);
-                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('_token', "{{ csrf_token() }}");
+                formData.append('token', "{{ $token }}");
+                formData.append('email', email);
 
                 $.ajax({
-                url: "{{ route('auth.signin_action') }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    Swal.fire({
-                        title: "Success!",
-                        text: data.message,
-                        icon: "success",
-                        button: "OK",
-                    }).then((value) => {
-                        window.location.href = "{{ route('dashboard') }}";
-                    });
-                },
-                error: function(data) {
-                    Swal.fire({
-                        title: "Error!",
-                        text: data.responseJSON.message,
-                        icon: "error",
-                        button: "OK",
-                    });
+                    url: "{{ route('password.update') }}",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then((result) => {
+                            window.location.href = "{{ route('auth.signin') }}";
+                        })
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: xhr.responseJSON.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
 
-                    $("#signin").val("Sign In");
-                    $("#signin").removeClass("disabled");
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            if ($("#" + key).attr("type") == "password") {
+                                $("#" + key).addClass("is-invalid");
+                                $("#" + key).parent().addClass("is-invalid");
+                                $("#" + key).parent().parent().find(".invalid-feedback").html(value);
+                            } else {
+                                $("#" + key).addClass("is-invalid");
+                                $("#" + key).parent().find(".invalid-feedback").html(value);
+                            }
+                        });
 
-                    $.each(data.responseJSON.errors, function(key, value) {
-                        if ($("#" + key).attr("type") == "password") {
-                            $("#" + key).addClass("is-invalid");
-                            $("#" + key).parent().addClass("is-invalid");
-                            $("#" + key).parent().parent().find(".invalid-feedback").html(value);
-                        } else {
-                            $("#" + key).addClass("is-invalid");
-                            $("#" + key).parent().find(".invalid-feedback").html(value);
-                        }
-                    });
-                },
-            });
-            });
-        });
+                        $("#submit").val("Set New Password").removeClass("disabled");
+                    }
+                })
+            })
+        })
     </script>
 </body>
 <!-- END: Body-->

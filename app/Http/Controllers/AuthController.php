@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\Traits\SessionCacheOrganization;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -133,7 +134,92 @@ class AuthController extends Controller
     }
 
     public function forgotPassword() {
-        return view('forgot-password');
+        return view('forgotpassword');
+    }
+
+    public function forgotPassword_action(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+    
+            $status = Password::sendResetLink(
+                $request->only('email')
+            );
+    
+            if ($status === Password::RESET_LINK_SENT) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reset password link sent!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forgot password failed!',
+                ], 500);
+            }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Forgot password failed!',
+                'errors' => $e->errors()
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function resetPassword($token) {
+        return view('resetpassword', ['token' => $token]);
+    }
+
+    public function resetPassword_action(Request $request)
+    {
+        try {
+            $request->validate([
+                'token' => 'required',
+                'email' => 'required|email',
+                'password' => 'required|confirmed|min:6',
+            ]);
+    
+            $status = Password::reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user) use ($request) {
+                    $user->forceFill([
+                        'password' => Hash::make($request->password)
+                    ])->save();
+                }
+            );
+    
+            if ($status === Password::PASSWORD_RESET) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reset password successful!'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Reset password failed!',
+                ], 500);
+            }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Reset password failed!',
+                'errors' => $e->errors()
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function verifyEmail() {

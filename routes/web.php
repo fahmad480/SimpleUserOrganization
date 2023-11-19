@@ -29,15 +29,22 @@ Route::get('/home', function () { // ceritanya bisa jadi landingpage
 });
 
 Route::middleware(['guest'])->group(function () {
+    Route::prefix('/password')->controller(AuthController::class)->name('password.')->group(function () {
+        Route::get('/forgot', 'forgotPassword')->name('request');
+        Route::post('/forgot', 'forgotPassword_action')->name('email');
+        Route::get('/reset/{token}', 'resetPassword')->name('reset');
+        Route::post('/reset', 'resetPassword_action')->name('update');
+    });
+
     Route::prefix('/signin')->controller(AuthController::class)->name('auth.')->group(function () {
         Route::get('/', 'signin')->name('signin');
         Route::post('/', 'signin_action')->name('signin_action');
     });
+
     Route::prefix('/signup')->controller(AuthController::class)->name('auth.')->group(function () {
         Route::get('/', 'signup')->name('signup');
         Route::post('/', 'signup_action')->name('signup_action');
     });
-    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('auth.forgot-password');
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -58,13 +65,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/switch/{organization}', [OrganizationController::class, 'switch'])->name('dashboard.switch');
     });
-
-    // Route::prefix('/car')->controller(CarController::class)->name('car.')->group(function () {
-    //     Route::get('/', 'index')->name('index');
-    //     Route::get('/add', 'add')->name('store');
-    //     Route::get('/update/{car?}', 'update')->name('update');
-    //     Route::get('/delete/{car?}', 'delete')->name('delete');
-    // });
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
